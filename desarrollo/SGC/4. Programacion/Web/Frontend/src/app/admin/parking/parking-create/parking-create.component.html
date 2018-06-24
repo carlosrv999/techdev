@@ -1,0 +1,163 @@
+<div class="row justify-content-md-center">
+  <div class="col col-lg-12" style="margin: 20px">
+    <div class="card bg-light mb-3">
+      <div class="card-header" style="background-color: #343a40; color: white">
+        <div class="row">
+          <div class="col col-lg-12">
+            <h4>Crear Cochera</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="container parkings">
+        <form [formGroup]="formCreate" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputEmail">Nombre de Usuario</label>
+              <input type="text" class="form-control" id="inputEmail" formControlName="email" placeholder="Nombre de Usuario">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputPassword">Contraseña</label>
+              <input type="password" class="form-control" id="inputPassword" formControlName="password" placeholder="Contraseña">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="inputNombre">Nombre de la cochera</label>
+                  <input type="text" class="form-control" id="inputNombre" formControlName="name" placeholder="Nombre">
+                </div>
+                <div class="form-group col-md-12">
+                  <label for="inputPassword4">Direccion</label>
+                  <input type="text" class="form-control" id="inputPassword4" formControlName="address" placeholder="Direccion">
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="exampleFormControlTextarea1">Descripcion</label>
+              <textarea formControlName="description" class="form-control" id="exampleFormControlTextarea1" rows="4"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="inputTelefono">Telefono de contacto</label>
+                  <input type="number" class="form-control" id="inputTelefono" formControlName="phone_number" placeholder="Telefono">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="inputPrecio">Precio de Alquiler/Hora</label>
+                  <input type="number" class="form-control" id="inputPrecio" formControlName="cost_hour" placeholder="Precio">
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="inputUbicacion">Ubicacion</label>
+                  <div class="form-row">
+                    <div class="form-group col-md-12">
+                      <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#exampleModal" (click)="onModalMap()">Seleccionar ubicacion</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="inputCapacidad">Capacidad</label>
+                  <input type="number" formControlName="capacity" class="form-control" id="inputCapacidad">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- this creates a google map on the page with the given lat/lng from -->
+          <!-- the component as the initial center of the map: -->
+
+          <!-- Modal -->
+          <div #myModal class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                   {{ mensaje }}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Seleccionar Ubicacion</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <agm-map [latitude]="lima.lat" [longitude]="lima.lng" [zoom]="12" (mapClick)="handleMapClick($event)">
+                    <agm-marker *ngIf="marker" [latitude]="marker.lat" [longitude]="marker.lng"></agm-marker>
+                  </agm-map>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <app-loading-screen *ngIf="loading"></app-loading-screen>
+
+          <ul class="upload_img row">
+            <li *ngFor="let image of archivos; let i = index" class="col-4 col-md-2">
+              <img [src]="image.base64file" class="img-fluid" name="file">
+              <div class="img-close" (click)="deleteimage(i)">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </div>
+            </li>
+          </ul>
+
+          <div class="row d-flex justify-content-center marg-bot">
+            <h3 class="col-12">Sube tu foto</h3>
+            <div NgDropFiles (archivosSobre)="archivosSobreDropZone($event)" (archivosImg)="archivosImagenes($event)" [ngClass]="{'dashdrop': estaSobreDropZone}"
+              class="col-md-11 dashed hidden-xs-down">
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-3 text-center">
+                  <div class="cloud" [ngClass]="{'boxdrop': estaSobreDropZone}" (archivosImg)="archivosImagenes($event)"></div>
+                  <h5>Arrastra y suelta tu foto</h5>
+                  <div class="span">ó</div>
+                  <div class="btn-subir-imgs">
+                    <label for="inp-file">Subir imagen</label>
+                    <input NgDropFiles multiple (archivosImg)="archivosImagenes($event)" type="file" id="inp-file" accept="image/*">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="row hidden-sm-up">
+                <div class="col-8">
+                  <h6>Seleccionar foto</h6>
+                  <small>Formatos permitidos JPG,JPEG,PNG</small>
+                  <small>(Tamaño maximo:100kb)</small>
+                  <small>Tamaño de imagen de referencia(800x600px)</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <button type="submit" class="btn btn-primary">Crear</button>
+          <button type="button" class="btn btn-danger" (click)="onCancelar()">Cancelar</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

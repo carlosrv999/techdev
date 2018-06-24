@@ -1,0 +1,17 @@
+<nav class="nav has-shadow">
+  <div class="container">
+    <div class="nav-left">
+      <a class="nav-item is-tab is-active">
+        <strong>Bienvenido, {{ cochera?.username }}</strong>
+      </a>
+    </div>
+    <span class="nav-toggle" [ngClass]="{ 'is-active': navToggle }" (click)="onToggleNav()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <div class="nav-right nav-menu" [ngClass]="{ 'is-active': navToggle }">
+      <a class="nav-item is-tab" (click)="onLogout()">Cerrar Sesión</a>
+    </div>
+  </div>
+</nav>

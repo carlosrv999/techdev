@@ -1,0 +1,101 @@
+<div class="row justify-content-md-center">
+  <div class="col col-lg-12" style="margin: 20px">
+    <div class="card bg-light mb-3">
+      <div class="card-header" style="background-color: #343a40; color: white">
+        <div class="row">
+          <div class="col col-lg-12">
+            <h4>Crear Empleado</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="container parkings">
+        <form [formGroup]="formCreate" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputEmail">Nombres</label>
+              <input type="text" class="form-control" id="inputEmail" formControlName="first_name" placeholder="Nombres">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputPassword">Apellidos</label>
+              <input type="text" class="form-control" id="inputPassword" formControlName="last_name" placeholder="Apellidos">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="inputNombre">Telefono</label>
+                  <input type="number" class="form-control" id="inputNombre" formControlName="phone_number" placeholder="Nombre">
+                </div>
+                <div class="form-group col-md-12">
+                  <label for="inputPassword4">Salario</label>
+                  <input type="number" class="form-control" id="inputPassword4" formControlName="salary" placeholder="Salario">
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="inputDNI">DNI</label>
+                  <input type="text" class="form-control" id="inputDNI" formControlName="dni" placeholder="DNI">
+                </div>
+                <div class="form-group col-md-12">
+                  <label for="inputPosition">Cargo</label>
+                  <input type="text" class="form-control" id="inputPosition" formControlName="position" placeholder="Cargo">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="selectParking">Cochera donde labora</label>
+              <select class="form-control" id="selectParking" formControlName="id_parking">
+                <option [ngValue]="null">Ninguno</option>
+                <option *ngFor="let parking of parkingNames" [ngValue]="parking.id">{{parking.name}}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+                </div>
+                <div class="form-group col-md-6">
+                  <button type="button" class="btn btn-danger btn-block" (click)="onCancelar()">Cancelar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- this creates a google map on the page with the given lat/lng from -->
+          <!-- the component as the initial center of the map: -->
+
+          <!-- Modal -->
+          <div #myModal class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  ¡No ha llenado los campos correctamente!
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <app-loading-screen *ngIf="loading"></app-loading-screen>
+
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

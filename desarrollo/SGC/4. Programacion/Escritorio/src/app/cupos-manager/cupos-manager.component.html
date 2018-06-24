@@ -1,0 +1,97 @@
+<div class="container">
+  <div class="column is-10 is-offset-1">
+    <div class="box datos-heading">
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <strong>Empleado principal: </strong>{{ cochera?.empleado?.nombres }} {{ cochera?.empleado?.apellido_pat }}
+        </div>
+        <div class="column is-6">
+          <strong>Direccion: </strong>{{ cochera?.direccion }}
+        </div>
+        <div class="column is-2">
+          <strong>Estado: </strong>
+        </div>
+        <div class="column is-2">
+          <span class="tag" [ngClass]="{ 'is-danger' : !cochera?.estado, 'is-success' : cochera?.estado }">{{ cochera?.estado ? "abierto" : "cerrado" }}</span>
+        </div>
+        <div class="column is-2">
+          <a class="button" [ngClass]="{ 'is-danger' : cochera?.estado, 'is-success' : !cochera?.estado, 'is-loading' : loading }" (click)="cambiarEstadoCochera()">{{ cochera?.estado ? "Cerrar" : "Abrir" }}</a>
+        </div>
+        <div class="column is-6">
+          <strong>Telefono: </strong>{{ cochera?.telefono }}
+        </div>
+        <div class="column is-6">
+          <strong>Cupos Totales:  </strong><span style="font-size: xx-large">{{ cochera?.capacidad }}</span>
+        </div>
+        <div class="column is-6">
+          <strong>Cupos Disponibles:  </strong><span style="font-size: xx-large">{{ cochera?.cupos_disp }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="column is-half is-offset-one-quarter">
+            <a class="button is-primary" style="display: block;" (click)="onAgregarCupo()">Agregar Cupo</a>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="column is-half is-offset-one-quarter">
+            <a class="button is-danger" style="display: block;" (click)="onEliminarCupo()">Eliminar Cupo</a>
+          </div>
+        </div>
+        <div class="column is-8 is-offset-2" *ngIf="notif">
+          <div class="notification is-danger">
+            <button class="delete" (click)="onCloseNotif()"></button>
+            Ya esta en su maxima capacidad!
+          </div>
+        </div>
+        <div class="column is-8 is-offset-2" *ngIf="notifEliminar">
+          <div class="notification is-danger">
+            <button class="delete" (click)="onCloseNotifEliminar()"></button>
+            No se pueden eliminar mas cupos!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal is-active" [ngClass]="{ 'is-active' : modalActive }">
+  <div class="modal-background" id="modalAgregar" (click)="onBackgroundClick()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Agregar Cupo</p>
+      <button class="delete" (click)="onCloseModal()"></button>
+    </header>
+    <section class="modal-card-body" style="text-align: center;">
+      Esta seguro de agregar un cupo?
+    </section>
+    <footer class="modal-card-foot">
+      <div class="container" >
+        <a class="button is-success" [ngClass]="{ 'is-loading' : agregarCuposLoading }" (click)="agregarCupo()">Save changes</a>
+        <a class="button" (click)="onCloseModal()">Cancel</a>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="modal is-active" [ngClass]="{ 'is-active' : modalEliminar }">
+  <div class="modal-background" id="modalEliminar" (click)="onBackgroundClick()">
+  </div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Eliminar Cupo</p>
+      <button class="delete" (click)="onCloseModal()"></button>
+    </header>
+    <section class="modal-card-body" style="text-align: center;">
+      Esta seguro de eliminar un cupo?
+    </section>
+    <footer class="modal-card-foot">
+      <div class="container">
+        <a class="button is-success" [ngClass]="{ 'is-loading' : eliminarCuposLoading }" (click)="eliminarCupo()">Save changes</a>
+        <a class="button" (click)="onCloseModal()">Cancel</a>
+      </div>
+    </footer>
+  </div>
+</div>

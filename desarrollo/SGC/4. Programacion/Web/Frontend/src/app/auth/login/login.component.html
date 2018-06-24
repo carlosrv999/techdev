@@ -1,0 +1,23 @@
+<div class="app-title">
+  <h1>Login</h1>
+</div>
+<div class="alert alert-success" *ngIf="success" role="alert">
+  ¡Registro exitoso! Ya puede iniciar sesion
+</div>
+<form (ngSubmit)="onSubmit()" [formGroup]="formLogin">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email</label>
+    <input type="email" class="form-control" [ngClass]="{'is-invalid': !formLogin.get('email').valid && formLogin.get('email').touched}" formControlName="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+    <div class="invalid-feedback">
+      Ponga un e-mail valido
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" formControlName="password" id="exampleInputPassword1" placeholder="Password">
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-large btn-block">Login</button>
+  <a class="login-link" [routerLink]="['/auth/signup']">Crear Cuenta</a>
+</form>
+<app-loading-screen *ngIf="loading"></app-loading-screen>
