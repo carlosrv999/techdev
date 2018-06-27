@@ -1,0 +1,8 @@
+.my-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.parkingDetail {
+  margin: 10px;
+}

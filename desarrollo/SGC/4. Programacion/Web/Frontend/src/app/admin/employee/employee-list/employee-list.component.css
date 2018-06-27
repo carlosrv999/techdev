@@ -1,0 +1,10 @@
+.content {
+  margin-top: 20px;
+  width: 100%;
+}
+.parkings {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 400px;
+  overflow-y: scroll;
+}
