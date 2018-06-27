@@ -12,13 +12,16 @@ import { HeaderComponent } from './header/header.component';
 import { HttpModule } from "@angular/http";
 import { CuposManagerComponent } from './cupos-manager/cupos-manager.component';
 import { CocheraService } from "app/servicios/cochera.service";
+import { ModalLoadingComponent } from './modal-loading/modal-loading.component';
+import { UpdateService } from "app/servicios/update.service";
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HeaderComponent,
-    CuposManagerComponent
+    CuposManagerComponent,
+    ModalLoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,7 @@ import { CocheraService } from "app/servicios/cochera.service";
     ReactiveFormsModule,
     HttpModule
   ],
-  providers: [AuthService, CocheraService, LoginGuard],
+  providers: [AuthService, CocheraService, LoginGuard, UpdateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

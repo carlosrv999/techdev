@@ -7,18 +7,18 @@ export class CocheraService {
   constructor(private http: Http) {}
   
   public getCochera(id: string) {
-    return this.http.get(Constantes.HTTP+Constantes.IP+':'+Constantes.PORT+'/'+Constantes.COCHERA_API+'/'+id+"?filter[include]=empleado&filter[include][servicioCocheras]=tipoServicio");
+    return this.http.get(Constantes.HTTP+Constantes.IP+'/parking/'+id);
   }
 
   public patchCocheraEstado(id: string, estado: boolean) {
-    return this.http.patch(Constantes.HTTP+Constantes.IP+':'+Constantes.PORT+'/'+Constantes.COCHERA_API+'/'+id, {
-      "estado": estado
+    return this.http.patch(Constantes.HTTP+Constantes.IP+'/parking/'+id, {
+      "status": estado
     });
   }
 
   public patchCocheraCupo(id: string, nuevo: number) {
-    return this.http.patch(Constantes.HTTP+Constantes.IP+':'+Constantes.PORT+'/'+Constantes.COCHERA_API+'/'+id, {
-      "cupos_disp": nuevo
+    return this.http.patch(Constantes.HTTP+Constantes.IP+'/parking/'+id, {
+      "current_used": nuevo
     });
   }
 }

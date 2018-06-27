@@ -1,21 +1,19 @@
 import { Empleado } from './empleado.model';
 import { ServicioCochera } from "app/models/servicio.model";
 export class Cochera {
-  public id_empresa: string;
-  public id_empleado: string;
-  public nombre: string;
+  public address: string;
+  public capacity: number;
+  public current_used: number;
   public coordenadas: {
     lat: number,
     lng: number
   }
-  public direccion: string;
-  public telefono: number;
-  public estado: boolean;
-  public capacidad: number;
+  public description: string;
+  public email: number;
+  public id: boolean;
+  public id_company: number;
   public cupos_disp: number;
   public username: string;
-  public email: string;
-  public id: string;
   public empleado: Empleado;
   public servicioCocheras: ServicioCochera[];
 }

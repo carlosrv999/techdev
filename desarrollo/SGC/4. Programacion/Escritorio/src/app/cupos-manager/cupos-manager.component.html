@@ -3,28 +3,28 @@
     <div class="box datos-heading">
       <div class="columns is-multiline">
         <div class="column is-6">
-          <strong>Empleado principal: </strong>{{ cochera?.empleado?.nombres }} {{ cochera?.empleado?.apellido_pat }}
+          <strong>Empleado principal: </strong>{{ cochera?.employee ? cochera.employee.first_name + " " + cochera.employee.last_name : "Ninguno" }}
         </div>
         <div class="column is-6">
-          <strong>Direccion: </strong>{{ cochera?.direccion }}
+          <strong>Direccion: </strong>{{ cochera?.address }}
         </div>
         <div class="column is-2">
           <strong>Estado: </strong>
         </div>
         <div class="column is-2">
-          <span class="tag" [ngClass]="{ 'is-danger' : !cochera?.estado, 'is-success' : cochera?.estado }">{{ cochera?.estado ? "abierto" : "cerrado" }}</span>
+          <span class="tag" [ngClass]="{ 'is-danger' : !cochera?.status, 'is-success' : cochera?.status }">{{ cochera?.status ? "abierto" : "cerrado" }}</span>
         </div>
         <div class="column is-2">
-          <a class="button" [ngClass]="{ 'is-danger' : cochera?.estado, 'is-success' : !cochera?.estado, 'is-loading' : loading }" (click)="cambiarEstadoCochera()">{{ cochera?.estado ? "Cerrar" : "Abrir" }}</a>
+          <a class="button" [ngClass]="{ 'is-danger' : cochera?.status, 'is-success' : !cochera?.status, 'is-loading' : loading }" (click)="cambiarEstadoCochera()">{{ cochera?.status ? "Cerrar" : "Abrir" }}</a>
         </div>
         <div class="column is-6">
-          <strong>Telefono: </strong>{{ cochera?.telefono }}
+          <strong>Telefono: </strong>{{ cochera?.phone_number }}
         </div>
         <div class="column is-6">
-          <strong>Cupos Totales:  </strong><span style="font-size: xx-large">{{ cochera?.capacidad }}</span>
+          <strong>Cupos Totales:  </strong><span style="font-size: xx-large">{{ cochera?.capacity }}</span>
         </div>
         <div class="column is-6">
-          <strong>Cupos Disponibles:  </strong><span style="font-size: xx-large">{{ cochera?.cupos_disp }}</span>
+          <strong>Cupos Usados:  </strong><span style="font-size: xx-large">{{ cochera?.current_used }}</span>
         </div>
       </div>
     </div>
@@ -75,6 +75,8 @@
     </footer>
   </div>
 </div>
+
+<app-modal-loading *ngIf="reloading"></app-modal-loading>
 
 <div class="modal is-active" [ngClass]="{ 'is-active' : modalEliminar }">
   <div class="modal-background" id="modalEliminar" (click)="onBackgroundClick()">

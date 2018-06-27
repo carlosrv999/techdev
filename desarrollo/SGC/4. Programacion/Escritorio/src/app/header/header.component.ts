@@ -1,3 +1,4 @@
+import { UpdateService } from './../servicios/update.service';
 import { CocheraService } from 'app/servicios/cochera.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
@@ -16,7 +17,8 @@ export class HeaderComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private authService: AuthService,
-              private cocheraService: CocheraService) { }
+              private cocheraService: CocheraService,
+              private update: UpdateService) { }
 
   ngOnInit() {
     this.cochera = this.authService.cochera;
@@ -29,6 +31,10 @@ export class HeaderComponent implements OnInit {
       let coch: Cochera = <Cochera>JSON.parse(localStorage.getItem(localStorage.key(0)))
       this.cochera = coch;
     }
+  }
+
+  onReload() {
+    this.update.onClick();
   }
 
   onToggleNav() {

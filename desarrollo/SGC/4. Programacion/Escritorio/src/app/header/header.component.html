@@ -1,17 +1,19 @@
-<nav class="nav has-shadow">
-  <div class="container">
-    <div class="nav-left">
-      <a class="nav-item is-tab is-active">
-        <strong>Bienvenido, {{ cochera?.username }}</strong>
-      </a>
-    </div>
-    <span class="nav-toggle" [ngClass]="{ 'is-active': navToggle }" (click)="onToggleNav()">
+<nav class="navbar is-primary" role="navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">
+      <strong>Bienvenido, {{ cochera?.email }}</strong>
+    </a>
+    <button class="button navbar-burger" [ngClass]="{ 'is-active': navToggle }" (click)="onToggleNav()">
       <span></span>
       <span></span>
       <span></span>
-    </span>
-    <div class="nav-right nav-menu" [ngClass]="{ 'is-active': navToggle }">
-      <a class="nav-item is-tab" (click)="onLogout()">Cerrar Sesión</a>
-    </div>
+    </button>
+  </div>
+
+  <div class="navbar-end navbar-menu" [ngClass]="{ 'is-active': navToggle }">
+    <a class="navbar-item" (click)="onReload()">
+      <div id="loader" class="reloadSingle"></div>
+    </a>
+    <a class="navbar-item" (click)="onLogout()">Cerrar Sesión</a>
   </div>
 </nav>

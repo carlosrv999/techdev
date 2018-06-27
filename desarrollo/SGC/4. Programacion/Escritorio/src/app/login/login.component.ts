@@ -41,19 +41,13 @@ export class LoginComponent implements OnInit {
       this.auth.loginUser(this.loginForm.get('username').value, this.loginForm.get('password').value)
         .subscribe(
           (response) => {
-            let obj = <{id: string, ttl: number, created: string, userId: string}>response.json();
-            this.cocheraService.getCochera(obj.userId).subscribe(
-              (response: Response) => {
-                let cochera = <Cochera>response.json();
-                this.auth.setCochera(cochera);
-                localStorage.setItem(obj.id, JSON.stringify(cochera));
-                console.log(JSON.stringify(cochera));
-                this.router.navigate(['/cupos']);
-                this.loading = false;
-              }, (error) => {
-                console.log(error);
-              }
-            );
+            console.log(response.json());
+            let obj = response.json();
+            this.auth.setCochera(obj);
+            localStorage.setItem(obj.id, JSON.stringify(obj));
+            console.log(JSON.stringify(obj));
+            this.router.navigate(['/cupos']);
+            this.loading = false;
           }, (error) => {
             this.loginError = true;
             this.loading = false;

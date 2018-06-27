@@ -1,3 +1,4 @@
+import { UpdateService } from './../servicios/update.service';
 import { CocheraService } from 'app/servicios/cochera.service';
 import { AuthService } from './../servicios/auth.service';
 import { Component, OnInit } from '@angular/core';
@@ -9,6 +10,7 @@ import { Cochera } from "app/models/cochera.model";
   styleUrls: ['./cupos-manager.component.css']
 })
 export class CuposManagerComponent implements OnInit {
+  reloading: boolean = false
   agregarCuposLoading = false;
   eliminarCuposLoading = false;
   notif = false;
@@ -16,21 +18,28 @@ export class CuposManagerComponent implements OnInit {
   modalActive = false;
   modalEliminar = false;
   loading: boolean = false;
-  cochera: Cochera;
+  cochera: any;
 
   constructor(private authService: AuthService,
-              private cocheraService: CocheraService) { }
+              private cocheraService: CocheraService,
+              private update: UpdateService) { }
 
   ngOnInit() {
     this.setCochera();
+    this.update.clicked.subscribe((clicked) => {
+      this.setCochera();
+    });
   }
 
   setCochera () {
+    this.reloading = true;
     if(localStorage.key(0) != null) {
-      let coch: Cochera = <Cochera>JSON.parse(localStorage.getItem(localStorage.key(0)));
+      let coch: any = JSON.parse(localStorage.getItem(localStorage.key(0)));
       this.cocheraService.getCochera(coch.id).subscribe(
         (response) => {
-          let resp: Cochera = <Cochera>response.json();
+          this.reloading = false;
+          let resp = response.json();
+          console.log(resp);
           this.cochera = resp;
         }, (error) => {
           console.log(error);
@@ -41,10 +50,11 @@ export class CuposManagerComponent implements OnInit {
 
   cambiarEstadoCochera() {
     this.loading = true;
-    this.cocheraService.patchCocheraEstado(this.cochera.id, !this.cochera.estado).subscribe(
+    this.cocheraService.patchCocheraEstado(this.cochera.id, !this.cochera.status).subscribe(
       (response) => {
-        let resp: Cochera = <Cochera>response.json();
-        this.cochera.estado = resp.estado;
+        let resp = response.json();
+        console.log(resp);
+        this.cochera.status = resp.result.updatedParking.status;
         this.loading = false;
       }, (error) => {
         console.log(error.json());
@@ -63,7 +73,7 @@ export class CuposManagerComponent implements OnInit {
   }
 
   onAgregarCupo() {
-    if(this.cochera.cupos_disp == 0) {
+    if(this.cochera.current_used >= this.cochera.capacity) {
       this.notif = true;
       setTimeout(() => {
         this.notif = false;
@@ -74,7 +84,7 @@ export class CuposManagerComponent implements OnInit {
   }
 
   onEliminarCupo() {
-    if(this.cochera.cupos_disp == this.cochera.capacidad) {
+    if(this.cochera.current_used == 0) {
       this.notifEliminar = true;
       console.log(this.notifEliminar);
       setTimeout(() => {
@@ -95,10 +105,11 @@ export class CuposManagerComponent implements OnInit {
 
   agregarCupo() {
     this.agregarCuposLoading = true;
-    this.cocheraService.patchCocheraCupo(this.cochera.id, this.cochera.cupos_disp - 1).subscribe(
+    this.cocheraService.patchCocheraCupo(this.cochera.id, this.cochera.current_used + 1).subscribe(
       (response) => {
-        let resp: Cochera = <Cochera>response.json();
-        this.cochera.cupos_disp = resp.cupos_disp;
+        let resp: any = response.json();
+        console.log(resp);
+        this.cochera.current_used = resp.result.updatedParking.current_used;
         this.agregarCuposLoading = false;
         this.modalActive = false;
       }, (error) => {
@@ -109,10 +120,10 @@ export class CuposManagerComponent implements OnInit {
 
   eliminarCupo() {
     this.eliminarCuposLoading = true;
-    this.cocheraService.patchCocheraCupo(this.cochera.id, this.cochera.cupos_disp + 1).subscribe(
+    this.cocheraService.patchCocheraCupo(this.cochera.id, this.cochera.current_used - 1).subscribe(
       (response) => {
-        let resp: Cochera = <Cochera>response.json();
-        this.cochera.cupos_disp = resp.cupos_disp;
+        let resp: any = response.json();
+        this.cochera.current_used = resp.result.updatedParking.current_used;
         this.eliminarCuposLoading = false;
         this.modalEliminar = false;
       }, (error) => {
