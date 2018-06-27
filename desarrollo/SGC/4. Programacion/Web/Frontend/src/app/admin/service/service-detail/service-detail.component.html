@@ -1,0 +1,49 @@
+<div class="parkingDetail">
+  <div class="card">
+    <a data-toggle="collapse" href="#collapse{{index}}" aria-expanded="true" aria-controls="collapse">
+      <div class="card-header" role="button" id="headingOne">
+        <h5 class="mb-0">
+          {{ service.name }}
+        </h5>
+      </div>
+    </a>
+
+    <div id="collapse{{index}}" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body my-container">
+        <form [formGroup]="formDetail" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="inputEmail">Costo del Servicio</label>
+              <input type="number" formControlName="cost_hour" class="form-control" id="inputNombre" placeholder="Costo del Servicio">
+            </div>
+          </div>
+          <button type="button" *ngIf="!editMode" (click)="onEditMode()" class="btn btn-primary">Editar</button>
+          <button type="submit" *ngIf="editMode" class="btn btn-success">
+            <i class="fa fa-spinner fa-spin" *ngIf="loadingSave" aria-hidden="true"></i> Guardar</button>
+          <button type="button" *ngIf="editMode" (click)="onCancel()" class="btn btn-danger">Cancelar</button>
+        </form>
+      </div>
+    </div>
+
+
+    <div #modalError class="modal fade" id="exampleModal6{{index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModal6Label"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModal6Label">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {{ errorModal }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

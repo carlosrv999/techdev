@@ -1,0 +1,43 @@
+<div class="row justify-content-md-center">
+  <div class="col col-lg-12" style="margin: 20px">
+    <div class="alert alert-success" *ngIf="success" role="alert">
+      ¡Empleado creado exitosamente!
+    </div>
+    <div class="alert alert-danger" *ngIf="errorSearch" role="alert">
+      Error de busqueda. Intente de nuevo
+    </div>
+    <div class="card bg-light mb-3">
+      <div class="card-header" style="background-color: #343a40; color: white">
+        <div class="row">
+          <div class="col col-lg-12">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-inline justify-content-between">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary" (click)="onCreateEmployee()">Crear Empleado</button>
+              </div>
+              <div class="col-lg-6">
+                <div class="input-group">
+                  <input type="text" formControlName="busqueda" class="form-control" placeholder="Search for..." aria-label="Search for...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-secondary" [disabled]="!enabledSearch" type="submit">
+                      <i class="ion-search"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="container parkings">
+        <app-loader *ngIf="loading"></app-loader>
+        <div id="accordion" *ngIf="!loading" role="tablist">
+          <app-employee-detail *ngFor="let employee of lista; let i = index" [index]="i" [employee]="employee"></app-employee-detail>
+        </div>
+      </div>
+
+    </div>
+    <app-pagination (goPage)="goToPage($event)" (goNext)="onNext()" (goPrev)="onPrev()" [pagesToShow]="10" [page]="page" [perPage]="limit"
+      [count]="total"></app-pagination>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="container" style="padding-top: 20px">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <form [formGroup]="formSearch" (ngSubmit)="onSubmitSearch()" class="form-inline">
+        <label class="mb-2 mr-sm-2 mb-sm-0" for="exampleFormControlSelect1">Seleccione una cochera </label>
+        <select formControlName="parking" class="form-control form-control-lg mb-2 mr-sm-2 mb-sm-0" id="exampleFormControlSelect1">
+          <option *ngFor="let park of listParkings" [ngValue]="park.id">{{ park.name }}</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Buscar Servicios</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-12" style="margin: 20px">
+      <div class="alert alert-success" *ngIf="success" role="alert">
+        Servicio creado exitosamente!
+      </div>
+      <div class="alert alert-danger" *ngIf="errorSearch" role="alert">
+        Error de busqueda. Intente de nuevo
+      </div>
+      <div class="alert alert-danger" *ngIf="errorMax" role="alert">
+        ¡ Ya no se pueden crear mas servicios !
+      </div>
+      <div class="card bg-light mb-3" *ngIf="buscado">
+        <div class="card-header" style="background-color: #343a40; color: white">
+          <div class="row">
+            <div class="col col-lg-12">
+              <button type="button" class="btn btn-primary" (click)="onCreateService()">Crear Servicio</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="container parkings">
+          <app-loader *ngIf="loading"></app-loader>
+          <div id="accordion" *ngIf="!loading" role="tablist">
+            <app-service-detail *ngFor="let service of listServices; let i = index" [index]="i" [service]="service"></app-service-detail>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

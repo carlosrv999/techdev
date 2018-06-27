@@ -1,0 +1,19 @@
+<nav class="navbar is-primary" role="navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">
+      <strong>Bienvenido, {{ cochera?.email }}</strong>
+    </a>
+    <button class="button navbar-burger" [ngClass]="{ 'is-active': navToggle }" (click)="onToggleNav()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div class="navbar-end navbar-menu" [ngClass]="{ 'is-active': navToggle }">
+    <a class="navbar-item" (click)="onReload()">
+      <div id="loader" class="reloadSingle"></div>
+    </a>
+    <a class="navbar-item" (click)="onLogout()">Cerrar Sesión</a>
+  </div>
+</nav>

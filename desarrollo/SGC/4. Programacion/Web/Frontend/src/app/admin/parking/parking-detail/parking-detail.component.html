@@ -1,0 +1,253 @@
+<div class="parkingDetail">
+  <div class="card">
+    <a data-toggle="collapse" href="#collapse{{index}}" aria-expanded="true" aria-controls="collapse">
+      <div class="card-header" role="button" id="headingOne">
+        <h5 class="mb-0">
+          {{ parking.name }}
+        </h5>
+      </div>
+    </a>
+
+    <div id="collapse{{index}}" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body my-container">
+        <img class="fondo" [src]="imagenFondo">
+        <form [formGroup]="formDetail" (ngSubmit)="onSubmitSave()">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputEmail">Nombre de Usuario</label>
+              <input type="text" formControlName="email" class="form-control" id="inputNombre" placeholder="Nombre de Usuario">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="changePass">Password</label>
+              <button type="button" [disabled]="!editMode" class="btn btn-info btn-block" data-toggle="modal" [attr.data-target]="'#exampleModal'+index">Cambiar Contraseña</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="inputNombre">Nombre de la cochera</label>
+                  <input type="text" formControlName="name" class="form-control" id="inputNombre" placeholder="Nombre">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="inputPassword4">Direccion</label>
+                  <input type="text" formControlName="address" class="form-control" id="inputPassword4" placeholder="Direccion">
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="exampleFormControlTextarea1">Descripcion</label>
+              <textarea formControlName="description" class="form-control" id="exampleFormControlTextarea1" rows="4"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputTelefono">Telefono de contacto</label>
+              <input type="number" formControlName="phone_number" class="form-control" id="inputTelefono" placeholder="Telefono">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="selectEmpleado">Empleado Principal</label>
+              <select class="form-control" id="selectEmpleado" formControlName="id_employee">
+                <option [ngValue]="null">Ninguno</option>
+                <option *ngFor="let employee of parking.employees" [ngValue]="employee.id">{{employee.first_name}} {{employee.last_name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputUbicacion">Ubicacion</label>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <button type="button" (click)="onModalMap()" data-toggle="modal" [attr.data-target]="'#exampleModal2'+index" class="btn btn-info btn-block">Ver coordenadas</button>
+                </div>
+                <div class="form-group col-md-6">
+                  <button type="button" (click)="onModalMap()" [disabled]="!editMode" data-toggle="modal" [attr.data-target]="'#exampleModal3'+index"
+                    class="btn btn-success btn-block">Editar coordenadas</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputCapacidad">Capacidad</label>
+              <input type="number" class="form-control" id="inputCapacidad" formControlName="capacity">
+            </div>
+            <div class="form-group col-md-2">
+              <label for="inputZip">Estado de la cochera</label>
+              <div style="float: right;">
+                <label class="switch">
+                  <input type="checkbox" formControlName="status">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <ul class="upload_img row">
+            <li *ngFor="let image of archivos; let i = index" class="col-4 col-md-2">
+              <img [src]="image.base64file" class="img-fluid" name="file">
+              <div class="img-close" (click)="deleteimage(i)">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </div>
+            </li>
+          </ul>
+
+          <div *ngIf="editMode" class="row d-flex justify-content-center marg-bot">
+            <h3 class="col-12">Sube tu foto</h3>
+            <div NgDropFiles (archivosSobre)="archivosSobreDropZone($event)" (archivosImg)="archivosImagenes($event)" [ngClass]="{'dashdrop': estaSobreDropZone}"
+              class="col-md-11 dashed hidden-xs-down">
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-3 text-center">
+                  <div class="cloud" [ngClass]="{'boxdrop': estaSobreDropZone}" (archivosImg)="archivosImagenes($event)"></div>
+                  <h5>Arrastra y suelta tu foto</h5>
+                  <div class="span">ó</div>
+                  <div class="btn-subir-imgs">
+                    <label for="inp-file">Subir imagen</label>
+                    <input NgDropFiles multiple (archivosImg)="archivosImagenes($event)" type="file" id="inp-file" accept="image/*">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="row hidden-sm-up">
+                <div class="col-8">
+                  <h6>Seleccionar foto</h6>
+                  <small>Formatos permitidos JPG,JPEG,PNG</small>
+                  <small>(Tamaño maximo:100kb)</small>
+                  <small>Tamaño de imagen de referencia(800x600px)</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container">
+            <div *ngIf="!editMode" class="row justify-content-end">
+              <div class="col-md-3">
+                <button type="button" class="btn btn-success btn-block" (click)="onEditMode()">Editar Campos</button>
+              </div>
+            </div>
+            <div *ngIf="editMode" class="row justify-content-end">
+              <div class="col-md-3">
+                <button type="submit" [disabled]="loadingSave" class="btn btn-success btn-block btn-primary">
+                  <i class="fa fa-spinner fa-spin" *ngIf="loadingSave" aria-hidden="true"></i> Guardar</button>
+              </div>
+              <div class="col-md-3">
+                <button type="button" [disabled]="loadingSave" class="btn btn-success btn-block btn-danger" (click)="onCancelar()">Cancelar</button>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="exampleModal2{{index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModal2Label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModal2Label">Ver Ubicacion</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <agm-map #varName [latitude]="marker.lat" [longitude]="marker.lng" [zoom]="16">
+                    <agm-marker *ngIf="marker" [latitude]="marker.lat" [longitude]="marker.lng"></agm-marker>
+                  </agm-map>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div #modalError class="modal fade" id="exampleModal6{{index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModal6Label"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModal6Label">Ver Ubicacion</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  {{ errorModal }}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="exampleModal3{{index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModal3Label">Ver Ubicacion</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <agm-map #varName2 [latitude]="marker.lat" [longitude]="marker.lng" [zoom]="16" (mapClick)="handleMapClick($event)">
+                    <agm-marker *ngIf="!markerNew" [latitude]="marker.lat" [longitude]="marker.lng"></agm-marker>
+                    <agm-marker *ngIf="markerNew" [latitude]="markerNew.lat" [longitude]="markerNew.lng"></agm-marker>
+                  </agm-map>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div #myModal class="modal fade" id="exampleModal{{index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <form [formGroup]="formPasswordChange" (ngSubmit)="onSubmitPassword()">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cambiar Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="form-row">
+                      <div class="form-group col-md-12">
+                        <label for="inputOldPass">Contraseña Antigua</label>
+                        <input type="text" formControlName="oldPassword" class="form-control" id="inputOldPass" placeholder="Contraseña antigua">
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-12">
+                        <label for="inputNewPassword">Contraseña Nueva</label>
+                        <input type="text" formControlName="newPassword" class="form-control" id="inputNewPassword" placeholder="Contraseña nueva">
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-12" [ngClass]="{ 'has-error': !formPasswordChange.get('newPassword2').valid && formPasswordChange.get('newPassword2').touched }">
+                        <label for="inputNewPassword">Repita su Contraseña Nueva</label>
+                        <input type="text" formControlName="newPassword2" class="form-control" [ngClass]="{'is-invalid': formPasswordChange.get('newPassword2').errors != null && formPasswordChange.get('newPassword2').touched ? formPasswordChange.get('newPassword2').errors['MatchPassword'] : false}"
+                          id="inputNewPassword2" placeholder="Contraseña nueva">
+                        <div *ngIf="formPasswordChange.get('newPassword2').errors != null ? formPasswordChange.get('newPassword2').errors['MatchPassword'] : false"
+                          class="invalid-feedback">
+                          Las contraseñas no coinciden
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="alert alert-success" *ngIf="success" role="alert">
+                      Contraseña cambiada. Su nueva contraseña es: {{ newPassword }}
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
