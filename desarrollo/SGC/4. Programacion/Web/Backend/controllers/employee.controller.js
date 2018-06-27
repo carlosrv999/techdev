@@ -14,16 +14,6 @@ exports.create = async (req, res) => {
   }
 }
 
-exports.update = async (req,res) => {
-  try {
-    let result = await dsEmployee.update(db, req.params.id, req.body);
-    res.status(200).send(result);
-  } catch(error) {
-    console.log(error);
-    res.status(500).send(error);
-  }
-}
-
 exports.getNotAssigned = async (req, res) => {
   try {
     let result = await dsEmployee.getNotAssigned(db);

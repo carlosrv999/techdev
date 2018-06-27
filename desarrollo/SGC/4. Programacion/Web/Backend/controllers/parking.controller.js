@@ -4,7 +4,6 @@ const dsParking = require('../datasource/parking.datasource');
 const dsParkingService = require('../datasource/parkingservice.datasource');
 const dsLocation = require('../datasource/location.datasource');
 const dsUser = require('../datasource/user.datasource');
-const dsService = require('../datasource/service.datasource');
 const constants = require('../config/constants');
 
 const userParkingType = 2;
@@ -139,8 +138,6 @@ exports.updateParking = async (req, res) => {
         req.body.address ||
         req.body.capacity ||
         req.body.id_employee ||
-        req.body.current_used ||
-        req.body.current_used == 0 ||
         req.body.status == true ||
         req.body.status == false ||
         req.body.phone_number ||
@@ -183,33 +180,6 @@ exports.getAllParkingsByCompany = async (req, res) => {
 exports.getParkingById = async (req, res) => {
   try {
     let result = await dsParking.getParkingById(db, req.params.id);
-    res.status(200).send(result);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-}
-
-exports.getServices = async (req,res) => {
-  try {
-    let result = await dsParkingService.getServicesFromParking(db, req.params.id);
-    res.status(200).send(result);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-}
-
-exports.createService = async (req,res) => {
-  try {
-    let result = await dsParkingService.createService(db, req.params.id, req.body);
-    res.status(200).send(result);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-}
-
-exports.getNotUsedServices = async(req,res) => {
-  try {
-    let result = await dsService.getNotUsedServices(db, req.params.id);
     res.status(200).send(result);
   } catch (error) {
     res.status(500).send(error);

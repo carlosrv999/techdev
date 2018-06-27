@@ -18,19 +18,6 @@ exports.create = (client, body) => {
   })
 }
 
-exports.update = (client, id, body) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const query = pg('employee').update(body).where('id', id).returning('*').toString();
-      let resp = await client.query(query);
-      resolve(resp.rows[0]);
-    } catch (error) {
-      console.log(error);
-      reject(error);
-    }
-  })
-}
-
 exports.getByCompany = (client, id_company) => {
   return new Promise(async (resolve, reject) => {
     try {

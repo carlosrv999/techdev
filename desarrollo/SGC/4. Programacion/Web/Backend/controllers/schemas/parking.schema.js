@@ -98,28 +98,3 @@ exports.createSchema = {
   "required": ["email", "password", "coordinates", "id_company", "name", "capacity", "description", "url_image"],
   "additionalProperties": false
 }
-
-exports.createService = {
-  "type": "object",
-  "properties": {
-    "cost_hour": {
-      "type": "number"
-    },
-    "id_service": {
-      "type": "string"
-    }
-  },
-  "required": ["cost_hour", "id_service"],
-  "additionalProperties": false
-}
-
-exports.updateService = {
-  "type": "object",
-  "properties": {
-    "cost_hour": {
-      "type": "number"
-    }
-  },
-  "required": ["cost_hour"],
-  "additionalProperties": false
-}

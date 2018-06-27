@@ -11,7 +11,6 @@ var parking = require('./routes/parking');
 var company = require('./routes/company');
 var employees = require('./routes/employee');
 var users = require('./routes/user');
-var parkingservices = require('./routes/parkingservice');
 
 var app = express();
 
@@ -31,7 +30,6 @@ app.use('/parking', parking);
 app.use('/companies', company);
 app.use('/employees', employees);
 app.use('/users', users);
-app.use('/parkingservices', parkingservices);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
