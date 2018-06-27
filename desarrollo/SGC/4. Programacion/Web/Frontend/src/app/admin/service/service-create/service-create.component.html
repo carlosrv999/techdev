@@ -1,0 +1,35 @@
+<div class="row justify-content-md-center">
+  <div class="col col-lg-12" style="margin: 20px">
+    <div class="card bg-light mb-3">
+      <div class="card-header" style="background-color: #343a40; color: white">
+        <div class="row">
+          <div class="col col-lg-12">
+            <h4>Crear Servicio</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="container parkings">
+        <form [formGroup]="formCreate" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputPassword">Nombre del Servicio</label>
+              <select class="form-control" id="selectEmpleado" formControlName="id_service">
+                <option *ngFor="let service of notUsedServices" [ngValue]="service.id">{{service.name}}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputEmail">Costo del servicio</label>
+              <input type="number" class="form-control" id="inputEmail" formControlName="cost_hour" placeholder="Costo">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <i class="fa fa-spinner fa-spin" *ngIf="loadingSave" aria-hidden="true"></i> Crear</button>
+          <button type="button" class="btn btn-danger" (click)="onCancelar()">Cancelar</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
