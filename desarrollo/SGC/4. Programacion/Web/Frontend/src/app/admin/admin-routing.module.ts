@@ -1,3 +1,5 @@
+import { ServiceCreateComponent } from './service/service-create/service-create.component';
+import { ServiceListComponent } from './service/service-list/service-list.component';
 import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
 import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
 import { ServiceComponent } from './service/service.component';
@@ -20,7 +22,10 @@ const adminRoutes: Routes = [
       { path: '', component: EmployeeListComponent },
       { path: 'create', component: EmployeeCreateComponent }
     ] },
-    { path: 'services', component: ServiceComponent }
+    { path: 'services', component: ServiceComponent, children: [
+      { path: '', component: ServiceListComponent },
+      { path: 'create', component: ServiceCreateComponent }
+    ] }
   ] }
 ]
 

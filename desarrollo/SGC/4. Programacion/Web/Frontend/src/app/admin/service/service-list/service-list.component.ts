@@ -10,6 +10,7 @@ import { ParkingService } from '../../parking/parking.service';
 })
 export class ServiceListComponent implements OnInit {
   success = false;
+  errorSearch = false;
   errorMax = false;
   buscado = false;
   company: any;

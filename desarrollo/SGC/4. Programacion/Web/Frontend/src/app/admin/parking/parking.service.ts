@@ -6,10 +6,21 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ParkingService {
+  public id_parking = null;
+
   constructor(private http: Http) { }
 
   getParkings(id_company: string, limit: number, page: number) {
     return this.http.get(`${AppUtil.HTTP}${AppUtil.IP}/parking/byCompany?id_company=${id_company}&limit=${limit}&page=${page}`).map(
+      (response: Response) => {
+        let responseObj = response.json();
+        return responseObj;
+      }
+    )
+  }
+
+  getServices(id) {
+    return this.http.get(`${AppUtil.HTTP}${AppUtil.IP}/parking/${id}/services`).map(
       (response: Response) => {
         let responseObj = response.json();
         return responseObj;
@@ -71,6 +82,15 @@ export class ParkingService {
     )
   }
 
+  updateService(id: string, objSubmit: any) {
+    return this.http.patch(`${AppUtil.HTTP}${AppUtil.IP}/parkingservices/${id}`, objSubmit).map(
+      (response) => {
+        let responseObj = response.json();
+        return responseObj;
+      }
+    )
+  }
+
   uploadFile(files: any): Observable<any> {
     let url: string = `${AppUtil.HTTP}${AppUtil.IP}/upload-image`;
     return Observable.create(
@@ -102,6 +122,24 @@ export class ParkingService {
       (response: Response) => {
         let responseObj = response.json();
         return responseObj.count;
+      }
+    )
+  }
+
+  getNotUsedServices(id: string) {
+    return this.http.get(`${AppUtil.HTTP}${AppUtil.IP}/parking/${id}/notUsedServices`).map(
+      (response: Response) => {
+        let responseObj = response.json();
+        return responseObj;
+      }
+    )
+  }
+
+  createService(id: string, values) {
+    return this.http.post(`${AppUtil.HTTP}${AppUtil.IP}/parking/${id}/services`, values).map(
+      (response: Response) => {
+        let responseObj = response.json();
+        return responseObj;
       }
     )
   }

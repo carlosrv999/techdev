@@ -12,6 +12,7 @@ declare var $: any;
   styleUrls: ['./employee-create.component.css']
 })
 export class EmployeeCreateComponent implements OnInit {
+  loadingSave = false;
   @ViewChild('myModal') myModal: ElementRef;
   lima = {
     lat: -12.060897,
@@ -40,8 +41,7 @@ export class EmployeeCreateComponent implements OnInit {
     this.formCreate = this._fb.group({
       'first_name': ['', Validators.required],
       'last_name': ['', Validators.required],
-      'status': [true],
-      'dni': [null, [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+      'dni': [null, [Validators.required, Validators.pattern('^[0-9]{8}$')]],
       'phone_number': [null, Validators.required],
       'position': ['', Validators.required],
       'salary': [null, Validators.required],
@@ -61,14 +61,18 @@ export class EmployeeCreateComponent implements OnInit {
       $(this.myModal.nativeElement).modal('show');
       return;
     }
+    this.loadingSave = true;
     let submitValues = this.formCreate.value;
     submitValues.phone_number = submitValues.phone_number.toString();
+    submitValues.dni = submitValues.dni.toString();
     console.log(submitValues);
     this._es.postEmployee(submitValues).subscribe(
       resolve => {
         console.log(resolve);
         this.router.navigate(['/home/employees'], { queryParams: { exito: true } });
+        this.loadingSave = false;
       }, error => {
+        this.loadingSave = false;
         console.log(error);
       }
     )

@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Input, Inject, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
+
+declare var $: any;
 
 @Component({
   selector: 'app-login',
@@ -9,6 +11,8 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['../auth.component.css']
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('myModal') myModal: ElementRef;
+  mensaje = 'Credenciales incorrectas';
   error = false;
   success = false;
   loading = false;
@@ -44,6 +48,7 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         this.router.navigate(['/home/parkings'])
       }, (error) => {
+        $(this.myModal.nativeElement).modal('show');
         this.loading = false;
         this.error = true;
       })

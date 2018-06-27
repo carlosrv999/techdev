@@ -26,6 +26,15 @@ export class EmployeeService {
     )
   }
 
+  updateEmployee(id, body: any) {
+    return this.http.patch(AppUtil.HTTP + AppUtil.IP + '/employees/'+id, body).map(
+      (response: Response) => {
+        let responseObj = response.json();
+        return responseObj;
+      }
+    )
+  }
+
   getEmployees(id_company: string, limit: number, page: number) {
     return this.http.get(`${AppUtil.HTTP}${AppUtil.IP}/employees/byCompany?id_company=${id_company}&limit=${limit}&page=${page}`).map(
       (response: Response) => {

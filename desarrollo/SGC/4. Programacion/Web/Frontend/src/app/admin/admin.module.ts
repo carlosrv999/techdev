@@ -23,6 +23,9 @@ import { EmployeeListComponent } from './employee/employee-list/employee-list.co
 import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
 import { EmployeeDetailComponent } from './employee/employee-detail/employee-detail.component';
 import { NgDropFilesDirective } from './ng-dropfiles.directive';
+import { ServiceListComponent } from './service/service-list/service-list.component';
+import { ServiceDetailComponent } from './service/service-detail/service-detail.component';
+import { ServiceCreateComponent } from './service/service-create/service-create.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,10 @@ import { NgDropFilesDirective } from './ng-dropfiles.directive';
     ParkingCreateComponent,
     EmployeeListComponent,
     EmployeeCreateComponent,
-    EmployeeDetailComponent
+    EmployeeDetailComponent,
+    ServiceListComponent,
+    ServiceDetailComponent,
+    ServiceCreateComponent
   ],
   imports: [
     CommonModule,
