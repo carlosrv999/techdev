@@ -4,6 +4,7 @@ const dsParking = require('../datasource/parking.datasource');
 const dsParkingService = require('../datasource/parkingservice.datasource');
 const dsLocation = require('../datasource/location.datasource');
 const dsUser = require('../datasource/user.datasource');
+const dsService = require('../datasource/service.datasource');
 const constants = require('../config/constants');
 
 const userParkingType = 2;
@@ -122,25 +123,30 @@ exports.updateParking = async (req, res) => {
     client = await db.pool.connect();
     await client.query('BEGIN');
     let parkingInstance = await dsParking.getParkingById(client, req.params.id);
-    if(parkingInstance) {
+    if (parkingInstance) {
       let result = {};
-      if(req.body.coordinates) {
+      if (req.body.coordinates) {
         let updatedLocation = await dsLocation.updateById(client, parkingInstance.id_location, req.body.coordinates);
         result.updatedLocation = updatedLocation;
         delete req.body.coordinates;
       }
-      if(req.body.email) {
+      if (req.body.email) {
         let updatedUser = await dsUser.updateUserEmail(client, parkingInstance.id_user, req.body.email);
         result.updatedUser = updatedUser;
         delete req.body.email;
       }
-      if(
+      if (
         req.body.address ||
         req.body.capacity ||
         req.body.id_employee ||
-        req.body.status ||
+        req.body.current_used ||
+        req.body.current_used == 0 ||
+        req.body.status == true ||
+        req.body.status == false ||
         req.body.phone_number ||
-        req.body.name
+        req.body.name ||
+        req.body.url_image ||
+        req.body.description
       ) {
         let updatedParking = await dsParking.updateParking(client, req.params.id, req.body);
         result.updatedParking = updatedParking;
@@ -157,10 +163,55 @@ exports.updateParking = async (req, res) => {
       });
     }
   } catch (error) {
-    if(client) {
+    if (client) {
       await client.query('ROLLBACK');
       client.release();
     }
+    res.status(500).send(error);
+  }
+}
+
+exports.getAllParkingsByCompany = async (req, res) => {
+  try {
+    let result = await dsParking.getAllParkingsByCompany(db, req.query.id_company);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+exports.getParkingById = async (req, res) => {
+  try {
+    let result = await dsParking.getParkingById(db, req.params.id);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+exports.getServices = async (req,res) => {
+  try {
+    let result = await dsParkingService.getServicesFromParking(db, req.params.id);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+exports.createService = async (req,res) => {
+  try {
+    let result = await dsParkingService.createService(db, req.params.id, req.body);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+exports.getNotUsedServices = async(req,res) => {
+  try {
+    let result = await dsService.getNotUsedServices(db, req.params.id);
+    res.status(200).send(result);
+  } catch (error) {
     res.status(500).send(error);
   }
 }

@@ -4,7 +4,9 @@ const db = require('../config/db');
 const uuidv4 = require('uuid/v4');
 
 const MAX_RADIUS_KILOMETERS = '5';
-const querySelectInRadius = `SELECT p.id, p.name, p.address, p.phone_number, p.status, p.capacity, p.current_used, p.id_user, p.id_company, p.id_location, json(ST_AsGeoJSON(l.location)) as location, 
+
+const queryParkingById = `select p.*, row_to_json(e.*) as employee from parking p left join employee e on e.id = p.id_employee where p.id = $1`
+const querySelectInRadius = `SELECT p.*, json(ST_AsGeoJSON(l.location)) as location, 
 (
   select json_agg(json_build_object(
       'id', ps.id,
@@ -17,15 +19,7 @@ const querySelectInRadius = `SELECT p.id, p.name, p.address, p.phone_number, p.s
 ) as services
 FROM location l join parking p on l.id = p.id_location WHERE ST_DistanceSphere(CAST(l.location AS geometry), ST_MakePoint($1,$2)) <= ${MAX_RADIUS_KILOMETERS} * 1000.0;`;
 const querySelectParkings = `select
-p.id,
-p.capacity,
-p.current_used,
-p.id_company,
-p.id_user,
-p.address,
-p.phone_number, 
-p.status, 
-p.name,
+p.*,
 m.email,
 json(ST_AsGeoJSON(l.location)) as location,
 to_json(e.*) as employee,
@@ -55,15 +49,7 @@ to_json(e.*) as employee,
      order by p.name limit $2 offset $3`;
 
 const querySelectParkingsByName = `select
-     p.id,
-     p.capacity,
-     p.current_used,
-     p.id_company,
-     p.id_user,
-     p.address,
-     p.phone_number, 
-     p.status, 
-     p.name,
+     p.*,
      m.email,
      json(ST_AsGeoJSON(l.location)) as location,
      to_json(e.*) as employee,
@@ -114,7 +100,6 @@ exports.getNearbyParkings = (lat, lng) => {
 exports.create = (client, body, id_user, id_location) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const queryParking = 'insert into parking(id, name, address, phone_number, status, capacity, id_user, id_company, id_location, id_employee) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning *';
       let insertValues = {
         ...body,
         id: uuidv4(),
@@ -163,23 +148,11 @@ exports.getParkingsCountByCompany = (client, id_company) => {
   });
 }
 
-exports.getParkingById = (client, id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const query = pg('parking').where('id', id).select().toString();
-      let result = await client.query(query);
-      resolve(result.rows[0]);
-    } catch (error) {
-      console.log(error);
-      reject(error);
-    }
-  });
-}
-
 exports.updateParking = (client, id, values) => {
   return new Promise(async (resolve, reject) => {
     try {
       let query = pg('parking').where('id', id).update(values).returning('*').toString();
+      console.log('QUERY:', query);
       let result = await client.query(query);
       resolve(result.rows[0]);
     } catch (error) {
@@ -207,6 +180,31 @@ exports.getParkingSearchByNameCount = (client, id_company, name) => {
     try {
       const values = [id_company, name + '%'];
       let result = await client.query(querySelectCountParkingsByName, values);
+      resolve(result.rows[0]);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+}
+
+exports.getAllParkingsByCompany = (client, id_company) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const query = pg('parking').select('id', 'name').where('id_company', id_company).toString();
+      let result = await client.query(query);
+      resolve(result.rows);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+}
+
+exports.getParkingById = (client, id_parking) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await client.query(queryParkingById, [id_parking])
       resolve(result.rows[0]);
     } catch (error) {
       console.log(error);

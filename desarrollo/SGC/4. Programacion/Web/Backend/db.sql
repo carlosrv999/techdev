@@ -13,6 +13,7 @@ PGPORT=5432 \
 npm start
 
 PGUSER=postgres PGHOST=localhost PGPASSWORD=carlos PGDATABASE=cocheras PGPORT=5432 npm start
+PGUSER=db_parking PGHOST=parking-db.curkhdmkqwoc.us-east-1.rds.amazonaws.com PGPASSWORD=carlitos PGDATABASE=parking PGPORT=5432 npm start
 
 --gap:
 CREATE EXTENSION postgis;
@@ -61,6 +62,8 @@ CREATE TABLE parking(
     id varchar(36) NOT NULL,
     name varchar(50),
     address varchar(60),
+    description varchar(250),
+    url_image varchar(100),
     phone_number varchar(20),
     status boolean NOT NULL DEFAULT TRUE,
     capacity int NOT NULL,

@@ -1,11 +1,28 @@
+const pg = require('knex')({ client: 'pg' });
 const uuidv4 = require('uuid/v4');
 
 exports.create = (client, body) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const query = 'insert into employee (id, first_name, last_name, status, dni, phone_number, position, salary, id_company, id_parking) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning *';
-      const values = [uuidv4(), body.first_name, body.last_name, body.status, body.dni, body.phone_number, body.position, body.salary, body.id_company, body.id_parking];
-      let resp = await client.query(query, values);
+      let submitValues = {
+        ...body,
+        id: uuidv4()
+      };
+      const query = pg('employee').insert(submitValues).returning('*').toString();
+      let resp = await client.query(query);
+      resolve(resp.rows[0]);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  })
+}
+
+exports.update = (client, id, body) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const query = pg('employee').update(body).where('id', id).returning('*').toString();
+      let resp = await client.query(query);
       resolve(resp.rows[0]);
     } catch (error) {
       console.log(error);
@@ -39,4 +56,57 @@ exports.getNotAssigned = (client) => {
       reject(error);
     }
   })
+}
+
+exports.getEmployeesCountByCompany = (client, id_company) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const query = 'select COUNT(id) from employee where id_company = $1';
+      const values = [id_company];
+      let result = await client.query(query, values);
+      resolve(result.rows[0]);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+}
+
+exports.getEmployeesByCompany = (client, id_company, limit, page) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const values = [id_company, limit, page];
+      let result = await client.query('select * from employee where id_company = $1 order by last_name limit $2 offset $3', values);
+      resolve(result.rows);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+}
+
+exports.getEmployeesByCompanyByName = (client, id_company, limit, page, name) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const values = [id_company, name + '%', limit, page];
+      let result = await client.query('select * from employee where id_company = $1 and UPPER(last_name) like UPPER($2) order by last_name limit $3 offset $4', values);
+      resolve(result.rows);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+}
+
+exports.getEmployeeSearchByNameCount = (client, id_company, name) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const values = [id_company, name + '%'];
+      let result = await client.query('select count(id) from employee where id_company = $1 and UPPER(last_name) like UPPER($2)', values);
+      resolve(result.rows[0]);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
 }
